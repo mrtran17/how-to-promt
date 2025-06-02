@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bí Kíp Prompt Engineering cho Coder - Trần Hữu Phước</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AOS CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+    <!-- GSAP for advanced animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #3b82f6;
+            --secondary-color: #8b5cf6;
+            --accent-color: #06b6d4;
+            --dark-bg: #0f172a;
+            --dark-surface: #1e293b;
+            --light-bg: #ffffff;
+            --light-surface: #f8fafc;
+        }
+
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-morphism {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+        }
+
+        .dark .glass-morphism {
+            background: rgba(15, 23, 42, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .parallax-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-attachment: fixed;
+        }
+
+        .dark .parallax-bg {
+            background: linear-gradient(135deg, #232526 0%, #414345 100%);
+            background-attachment: fixed;
+        }
+
+        .floating-animation {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark .card-hover:hover {
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .neon-glow {
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+        }
+
+        .dark .neon-glow {
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.6);
+        }
+
+        .typewriter {
+            overflow: hidden;
+            border-right: 2px solid;
+            white-space: nowrap;
+            animation: typing 3s steps(50, end), blink-caret 0.75s step-end infinite;
+        }
+
+        @keyframes typing {
+            from {
+                width: 0;
+            }
+
+            to {
+                width: 100%;
+            }
+        }
+
+        @keyframes blink-caret {
+
+            from,
+            to {
+                border-color: transparent;
+            }
+
+            50% {
+                border-color: var(--primary-color);
+            }
+        }
+
+        .scroll-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            z-index: 9999;
+            transition: width 0.3s ease;
+        }
+    </style>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.5s ease-in-out',
+                        'bounce-in': 'bounceIn 0.5s ease-in-out',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-gray-50 dark:bg-slate-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+    <!-- Scroll Progress Indicator -->
+    <div class="scroll-indicator"></div>
+    <!-- Header -->
+    <header class="glass-morphism sticky top-0 z-50 backdrop-blur-lg">
+        <nav class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div
+                        class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
+                        <i data-lucide="brain-circuit" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold gradient-text">Prompt Engineering Pro</h1>
+                        <p class="text-xs text-gray-600 dark:text-gray-400">by Trần Hữu Phước</p>
+                    </div>
+                </div>
+
+                <div class="hidden md:flex space-x-6">
+                    <a href="#principles"
+                        class="nav-link text-gray-700 dark:text-gray-300 hover:text-blue-500 transition-colors duration-200">Nguyên
+                        Tắc</a>
+                    <a href="#techniques"
+                        class="nav-link text-gray-700 dark:text-gray-300 hover:text-blue-500 transition-colors duration-200">Kỹ
+                        Thuật</a>
+                    <a href="#practice"
+                        class="nav-link text-gray-700 dark:text-gray-300 hover:text-blue-500 transition-colors duration-200">Thực
+                        Chiến</a>
+                    <a href="#tools"
+                        class="nav-link text-gray-700 dark:text-gray-300 hover:text-blue-500 transition-colors duration-200">Công
+                        Cụ</a>
+                </div>
+
+                <div class="flex items-center space-x-3">
+                    <button id="darkModeToggle"
+                        class="p-2 rounded-lg glass-morphism hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200">
+                        <i data-lucide="sun" class="w-5 h-5 dark:hidden"></i>
+                        <i data-lucide="moon" class="w-5 h-5 hidden dark:block"></i>
+                    </button>
+                    <button id="mobileMenuToggle" class="md:hidden p-2 rounded-lg glass-morphism">
+                        <i data-lucide="menu" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobileMenu" class="hidden md:hidden mt-4 p-4 glass-morphism rounded-lg">
+                <a href="#principles" class="block py-2 text-gray-700 dark:text-gray-300">Nguyên Tắc</a>
+                <a href="#techniques" class="block py-2 text-gray-700 dark:text-gray-300">Kỹ Thuật</a>
+                <a href="#practice" class="block py-2 text-gray-700 dark:text-gray-300">Thực Chiến</a>
+                <a href="#tools" class="block py-2 text-gray-700 dark:text-gray-300">Công Cụ</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="parallax-bg min-h-screen flex items-center justify-center relative overflow-hidden">
+        <div class="absolute inset-0 bg-black/20"></div>
+        <div class="container mx-auto px-6 text-center relative z-10" data-aos="fade-up">
+            <div class="floating-animation mb-8">
+                <div
+                    class="w-24 h-24 mx-auto rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center mb-6 neon-glow">
+                    <i data-lucide="sparkles" class="w-12 h-12 text-white"></i>
+                </div>
+            </div>
+
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 text-white">
+                <span class="typewriter">Prompt Engineering</span><br>
+                <span class="gradient-text">Đỉnh Cao</span>
+            </h1>
+
+            <p class="text-xl md:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto">
+                Khám phá nghệ thuật và khoa học của việc thiết kế prompts hiệu quả để tương tác với AI
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button
+                    class="glass-morphism px-8 py-4 rounded-full text-white font-semibold hover:scale-105 transition-transform duration-200 neon-glow">
+                    <i data-lucide="rocket" class="w-5 h-5 inline mr-2"></i>
+                    Bắt Đầu Ngay
+                </button>
+                <button
+                    class="glass-morphism px-8 py-4 rounded-full text-white font-semibold hover:scale-105 transition-transform duration-200">
+                    <i data-lucide="play-circle" class="w-5 h-5 inline mr-2"></i>
+                    Xem Demo
+                </button>
+            </div>
+        </div>
+
+        <!-- Animated Background Elements -->
+        <div class="absolute top-20 left-20 w-32 h-32 rounded-full bg-blue-500/10 animate-pulse"></div>
+        <div class="absolute bottom-20 right-20 w-48 h-48 rounded-full bg-purple-500/10 animate-bounce"></div>
+        <div class="absolute top-1/2 left-1/4 w-24 h-24 rounded-full bg-cyan-500/10 floating-animation"></div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-20 bg-white dark:bg-slate-800" data-aos="fade-up">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="text-center card-hover glass-morphism p-6 rounded-2xl">
+                    <div
+                        class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center">
+                        <i data-lucide="users" class="w-8 h-8 text-white"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold gradient-text mb-2">10K+</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Người Học</p>
+                </div>
+
+                <div class="text-center card-hover glass-morphism p-6 rounded-2xl">
+                    <div
+                        class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
+                        <i data-lucide="book-open" class="w-8 h-8 text-white"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold gradient-text mb-2">50+</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Bài Học</p>
+                </div>
+
+                <div class="text-center card-hover glass-morphism p-6 rounded-2xl">
+                    <div
+                        class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 flex items-center justify-center">
+                        <i data-lucide="target" class="w-8 h-8 text-white"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold gradient-text mb-2">95%</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Hiệu Quả</p>
+                </div>
+
+                <div class="text-center card-hover glass-morphism p-6 rounded-2xl">
+                    <div
+                        class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-orange-500 to-red-500 flex items-center justify-center">
+                        <i data-lucide="zap" class="w-8 h-8 text-white"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold gradient-text mb-2">24/7</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Hỗ Trợ</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Principles Section -->
+    <section id="principles" class="py-20 bg-gray-50 dark:bg-slate-900">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-4xl md:text-5xl font-bold gradient-text mb-4">7 Nguyên Tắc Vàng</h2>
+                <p class="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+                    Nền tảng vững chắc để giao tiếp hiệu quả với AI. Mỗi nguyên tắc được thiết kế để tối ưu hóa chất
+                    lượng phản hồi từ AI.
+                </p>
+            </div>
+
+            <div class="space-y-6" id="principlesContainer">
+                <!-- Principle cards will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Techniques Section with Interactive Chart -->
+    <section id="techniques" class="py-20 bg-white dark:bg-slate-800">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-4xl md:text-5xl font-bold gradient-text mb-4">Kỹ Thuật Prompting Nâng Cao</h2>
+                <p class="text-xl text-gray-600 dark:text-gray-400">
+                    Khai thác sâu hơn khả năng của AI với các kỹ thuật tinh vi
+                </p>
+            </div>
+
+            <div class="flex flex-col lg:flex-row gap-12 items-center">
+                <div class="w-full lg:w-1/2" data-aos="fade-right">
+                    <div class="glass-morphism p-8 rounded-2xl">
+                        <canvas id="techniquesChart" width="400" height="400"></canvas>
+                    </div>
+                </div>
+
+                <div class="w-full lg:w-1/2" data-aos="fade-left">
+                    <div id="techniqueDetails" class="glass-morphism p-8 rounded-2xl min-h-[400px]">
+                        <div class="text-center text-gray-500 dark:text-gray-400 flex flex-col justify-center h-full">
+                            <i data-lucide="lightbulb" class="w-16 h-16 mx-auto mb-4 text-yellow-500"></i>
+                            <p class="text-lg">Nhấp vào biểu đồ để khám phá từng kỹ thuật!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Practice Section -->
+    <section id="practice" class="py-20 bg-gray-50 dark:bg-slate-900">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-4xl md:text-5xl font-bold gradient-text mb-4">Thực Chiến Prompt</h2>
+                <p class="text-xl text-gray-600 dark:text-gray-400">
+                    Áp dụng prompt vào các tác vụ lập trình hàng ngày
+                </p>
+            </div>
+
+            <!-- Filter Buttons -->
+            <div class="flex flex-wrap justify-center gap-3 mb-12" data-aos="fade-up" data-aos-delay="200">
+                <button
+                    class="filter-btn active px-6 py-3 rounded-full glass-morphism font-semibold transition-all duration-200 hover:scale-105"
+                    data-filter="all">
+                    Tất cả
+                </button>
+                <button
+                    class="filter-btn px-6 py-3 rounded-full glass-morphism font-semibold transition-all duration-200 hover:scale-105"
+                    data-filter="code">
+                    <i data-lucide="code" class="w-4 h-4 inline mr-2"></i>
+                    Tạo Code
+                </button>
+                <button
+                    class="filter-btn px-6 py-3 rounded-full glass-morphism font-semibold transition-all duration-200 hover:scale-105"
+                    data-filter="debug">
+                    <i data-lucide="bug" class="w-4 h-4 inline mr-2"></i>
+                    Debug
+                </button>
+                <button
+                    class="filter-btn px-6 py-3 rounded-full glass-morphism font-semibold transition-all duration-200 hover:scale-105"
+                    data-filter="optimize">
+                    <i data-lucide="zap" class="w-4 h-4 inline mr-2"></i>
+                    Tối ưu
+                </button>
+            </div>
+
+            <!-- Practice Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="practiceCards">
+                <!-- Cards will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Tools Section -->
+    <section id="tools" class="py-20 bg-white dark:bg-slate-800">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-4xl md:text-5xl font-bold gradient-text mb-4">Công Cụ Pro</h2>
+                <p class="text-xl text-gray-600 dark:text-gray-400">
+                    Nâng tầm kỹ năng với các công cụ và tham số chuyên nghiệp
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- AI Parameters Control -->
+                <div class="glass-morphism p-8 rounded-2xl card-hover" data-aos="fade-right">
+                    <h3 class="text-2xl font-bold mb-6 gradient-text">
+                        <i data-lucide="sliders" class="w-6 h-6 inline mr-3"></i>
+                        Điều Khiển AI
+                    </h3>
+
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-semibold mb-2">Temperature (Độ sáng tạo)</label>
+                            <input type="range" id="temperatureSlider" min="0" max="1" step="0.1" value="0.3"
+                                class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer">
+                            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                <span>Chính xác</span>
+                                <span>Cân bằng</span>
+                                <span>Sáng tạo</span>
+                            </div>
+                            <p id="temperatureDesc" class="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                                Giá trị thấp: Kết quả nhất quán, chính xác. Phù hợp sinh code theo đặc tả.
+                            </p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold mb-2">Max Tokens</label>
+                            <input type="range" id="tokensSlider" min="50" max="4000" step="50" value="1000"
+                                class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer">
+                            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                <span>50</span>
+                                <span id="tokensValue">1000</span>
+                                <span>4000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recommended Tools -->
+                <div class="glass-morphism p-8 rounded-2xl card-hover" data-aos="fade-left">
+                    <h3 class="text-2xl font-bold mb-6 gradient-text">
+                        <i data-lucide="wrench" class="w-6 h-6 inline mr-3"></i>
+                        Công Cụ Khuyến Nghị
+                    </h3>
+
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-3 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                            <i data-lucide="sparkles" class="w-6 h-6 text-blue-500"></i>
+                            <div>
+                                <h4 class="font-semibold">PromptPerfect</h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">Tối ưu hóa prompt tự động</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center space-x-3 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                            <i data-lucide="link-2" class="w-6 h-6 text-purple-500"></i>
+                            <div>
+                                <h4 class="font-semibold">LangChain</h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">Framework xây dựng ứng dụng LLM</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center space-x-3 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                            <i data-lucide="chrome" class="w-6 h-6 text-green-500"></i>
+                            <div>
+                                <h4 class="font-semibold">PromptStorm</h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">Tiện ích Chrome với thư viện prompt
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center space-x-3 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                            <i data-lucide="github" class="w-6 h-6 text-gray-800 dark:text-gray-200"></i>
+                            <div>
+                                <h4 class="font-semibold">GitHub Copilot</h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">AI pair programming assistant</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 dark:bg-black text-white py-12">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div
+                            class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
+                            <i data-lucide="brain-circuit" class="w-6 h-6 text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">Prompt Engineering Pro</h3>
+                            <p class="text-sm text-gray-400">by Trần Hữu Phước</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        Nâng cao kỹ năng lập trình với nghệ thuật prompt engineering.
+                        Học cách tương tác hiệu quả với AI để tạo ra code chất lượng cao.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">
+                            <i data-lucide="github" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">
+                            <i data-lucide="twitter" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">
+                            <i data-lucide="linkedin" class="w-5 h-5"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="font-semibold mb-4">Học Tập</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors duration-200">Nguyên Tắc Cơ Bản</a>
+                        </li>
+                        <li><a href="#" class="hover:text-white transition-colors duration-200">Kỹ Thuật Nâng Cao</a>
+                        </li>
+                        <li><a href="#" class="hover:text-white transition-colors duration-200">Thực Chiến</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors duration-200">Công Cụ</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-semibold mb-4">Liên Hệ</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors duration-200">Hỗ Trợ</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors duration-200">Phản Hồi</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors duration-200">Cộng Đồng</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors duration-200">Blog</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <hr class="border-gray-800 my-8">
+
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm">
+                    © 2024 Trần Hữu Phước. All rights reserved.
+                </p>
+                <p class="text-gray-400 text-sm mt-2 md:mt-0">
+                    "Code Smarter, Not Harder" với Prompt Engineering
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Dark Mode Toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const html = document.documentElement;
+
+        darkModeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            localStorage.setItem('darkMode', html.classList.contains('dark'));
+        });
+
+        // Load saved dark mode preference
+        if (localStorage.getItem('darkMode') === 'true') {
+            html.classList.add('dark');
+        }
+
+        // Mobile Menu Toggle
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        mobileMenuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Scroll Progress Indicator
+        window.addEventListener('scroll', () => {
+            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            document.querySelector('.scroll-indicator').style.width = scrolled + '%';
+        });
+
+        // Smooth Scrolling for Navigation Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Temperature Slider
+        const tempSlider = document.getElementById('temperatureSlider');
+        const tempDesc = document.getElementById('temperatureDesc');
+
+        tempSlider.addEventListener('input', (e) => {
+            const value = parseFloat(e.target.value);
+            if (value <= 0.3) {
+                tempDesc.textContent = 'Giá trị thấp: Kết quả nhất quán, chính xác. Phù hợp sinh code theo đặc tả.';
+            } else if (value <= 0.7) {
+                tempDesc.textContent = 'Giá trị trung bình: Cân bằng giữa chính xác và đa dạng. Tốt cho brainstorm giải pháp.';
+            } else {
+                tempDesc.textContent = 'Giá trị cao: Kết quả sáng tạo, đa dạng, đôi khi bất ngờ. Dùng khi cần ý tưởng mới lạ.';
+            }
+        });
+
+        // Tokens Slider
+        const tokensSlider = document.getElementById('tokensSlider');
+        const tokensValue = document.getElementById('tokensValue');
+
+        tokensSlider.addEventListener('input', (e) => {
+            tokensValue.textContent = e.target.value;
+        });
+
+        // Techniques Chart
+        const ctx = document.getElementById('techniquesChart').getContext('2d');
+        const techniquesChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Instruction', 'Few-Shot', 'Chain-of-Thought', 'Zero-Shot', 'Role Prompting'],
+                datasets: [{
+                    data: [30, 25, 20, 15, 10],
+                    backgroundColor: [
+                        'rgba(59, 130, 246, 0.8)',
+                        'rgba(139, 92, 246, 0.8)',
+                        'rgba(16, 185, 129, 0.8)',
+                        'rgba(245, 158, 11, 0.8)',
+                        'rgba(239, 68, 68, 0.8)'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true,
+                            color: getComputedStyle(document.documentElement).getPropertyValue('--tw-text-opacity') > 0 ? '#374151' : '#9CA3AF' // Adapts to Tailwind's text color based on dark mode
+                        }
+                    }
+                },
+                onClick: (event, elements) => {
+                    if (elements.length > 0) {
+                        const index = elements[0].index;
+                        updateTechniqueDetails(index);
+                    }
+                }
+            }
+        });
+
+        const techniques = [
+  {
+    name: 'Instruction Prompting',
+    desc: 'Đưa ra chỉ dẫn, mệnh lệnh trực tiếp, rõ ràng về tác vụ hoặc quy tắc. Phù hợp cho yêu cầu cụ thể, đơn giản như sinh code theo đặc tả.',
+    pros: 'Đơn giản, trực tiếp, dễ kiểm soát.',
+    cons: 'Không đủ cho các tác vụ phức tạp đòi hỏi suy luận sâu.',
+    icon: 'command',
+    example: `Viết một class Java tên là 'UserService' có phương thức 'findUserById(int id)' trả về đối tượng User từ database sử dụng Spring Data JPA.`
+  },
+  {
+    name: 'Few-Shot Prompting',
+    desc: 'Cung cấp VÀI ví dụ mẫu (đầu vào - đầu ra) để AI học khuôn mẫu. Tuyệt vời để sinh code theo format, style cụ thể.',
+    pros: 'Kết quả chất lượng cao, giúp AI "học" nhanh.',
+    cons: 'Cần chuẩn bị ví dụ chất lượng, cẩn thận bias.',
+    icon: 'layers',
+    example: `Chuyển đổi các đoạn mô tả API REST thành mã controller Spring Boot:
+Input: "GET /products — Trả về danh sách tất cả sản phẩm"
+Output:
+@GetMapping("/products")
+public List<Product> getAllProducts() {
+    return productService.findAll();
+}
+
+Input: "POST /brands — Thêm thương hiệu mới"
+Output:`
+  },
+  {
+    name: 'Chain-of-Thought',
+    desc: 'Yêu cầu AI trình bày quá trình suy luận từng bước. Rất mạnh mẽ khi gỡ lỗi logic phức tạp, giải thích thuật toán.',
+    pros: 'Tăng độ chính xác và minh bạch cho tác vụ suy luận.',
+    cons: 'Hiệu quả nhất với các LLM lớn, có thể làm prompt dài hơn.',
+    icon: 'git-branch',
+    example: `Giải thích từng bước cách thuật toán Merge Sort xử lý mảng [5, 3, 8, 4, 2]. Mô tả từng lần chia mảng và quá trình gộp lại.`
+  },
+  {
+    name: 'Zero-Shot Prompting',
+    desc: 'Yêu cầu AI thực hiện tác vụ mà không cần ví dụ mẫu. Dùng cho các tác vụ phổ biến, kiến thức chung.',
+    pros: 'Nhanh chóng, không cần chuẩn bị ví dụ.',
+    cons: 'Độ chính xác có thể không cao với tác vụ đặc thù.',
+    icon: 'zap',
+    example: `Tạo một REST API bằng Spring Boot cho phép người dùng đăng ký tài khoản với email và mật khẩu.`
+  },
+  {
+    name: 'Role Prompting',
+    desc: 'Yêu cầu AI "nhập vai" một chuyên gia cụ thể. AI sẽ tư duy và trả lời từ góc độ đó.',
+    pros: 'Định hướng kiến thức và phong cách trả lời.',
+    cons: 'Cần chọn vai trò phù hợp với tác vụ.',
+    icon: 'user-check',
+    example: `Bạn là một chuyên gia Spring Security. Hãy phân tích đoạn cấu hình bảo mật sau và đề xuất cải tiến để bảo vệ endpoint /admin chỉ cho role ADMIN.`
+  }
+];
+
+
+        function updateTechniqueDetails(index) {
+            const technique = techniques[index];
+            const detailsContainer = document.getElementById('techniqueDetails');
+
+            detailsContainer.innerHTML = `
+            <div class="animate__animated animate__fadeIn">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center mr-4">
+                        <i data-lucide="${technique.icon}" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold gradient-text">${technique.name}</h3>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 mb-6">${technique.desc}</p>
+                <div class="space-y-4">
+                    <div class="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg">
+                        <h4 class="font-semibold text-green-700 dark:text-green-400 mb-2">✅ Ưu điểm:</h4>
+                        <p class="text-green-600 dark:text-green-300">${technique.pros}</p>
+                    </div>
+                    <div class="p-4 bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-700 rounded-lg">
+                        <h4 class="font-semibold text-orange-700 dark:text-orange-400 mb-2">⚠️ Nhược điểm:</h4>
+                        <p class="text-orange-600 dark:text-orange-300">${technique.cons}</p>
+                    </div>
+                    ${technique.example ? `
+                    <div class="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg">
+                        <h4 class="font-semibold text-blue-700 dark:text-blue-400 mb-2">💡 Ví dụ Prompt:</h4>
+                        <code class="block text-sm text-blue-900 dark:text-blue-300 whitespace-pre-wrap">${technique.example}</code>
+                    </div>
+                    ` : ''}
+                </div>
+            </div>
+        `;
+
+            lucide.createIcons();
+        }
+
+        // Principles Data & Rendering
+        const principlesData = [
+            { title: '1. Rõ ràng và Cụ thể', content: 'AI không "đoán ý". Cần mô tả chi tiết mục tiêu, chức năng, ngôn ngữ, thư viện. Thiếu cụ thể là nguyên nhân chính gây ra phản hồi kém.', exampleBad: '"Viết code sắp xếp."', exampleGood: '"Viết hàm Python sort_users_by_age nhận list object User, trả về list mới sắp xếp theo tuổi tăng dần."' },
+            { title: '2. Cung cấp Ngữ cảnh', content: 'AI cần "bức tranh toàn cảnh". Cung cấp ngôn ngữ, phiên bản, thư viện, code hiện có, thông báo lỗi, mục tiêu và ràng buộc.', exampleBad: '"Sửa lỗi code này."', exampleGood: '"Code React 18 này báo lỗi \'Cannot read properties of undefined\'. Đây là code component và action: [code]. Hãy chỉ ra nguyên nhân và cách sửa."' },
+            { title: '3. Xác định Vai trò', content: 'Yêu cầu AI "nhập vai" một chuyên gia cụ thể để định hướng chất lượng và phong cách câu trả lời.', exampleBad: '"Giải thích code này."', exampleGood: '"Bạn là một chuyên gia giải thuật. Hãy giải thích độ phức tạp của code tìm đường đi ngắn nhất bằng Dijkstra này cho người mới học."' },
+            { title: '4. Chỉ định Định dạng & Độ dài', content: 'Đừng để AI tự quyết định cách trình bày. Nêu rõ dạng output (list, table, JSON) và giới hạn độ dài để tránh lan man.', exampleBad: '"Tóm tắt đoạn code."', exampleGood: '"Tóm tắt chức năng class PaymentProcessor sau thành 3 gạch đầu dòng, mỗi gạch đầu dòng < 20 từ, output dạng markdown."' },
+            { title: '5. Lặp lại và Tinh chỉnh', content: 'Hiếm khi prompt đầu tiên đã hoàn hảo. Coi câu trả lời đầu tiên là bản nháp, sau đó liên tục thử nghiệm và điều chỉnh.', exampleBad: '(Chỉ gửi 1 lần và chấp nhận kết quả)', exampleGood: 'P1: "Tạo hàm Python validate mật khẩu." -> P2: "Tốt. Giờ thêm yêu cầu: mật khẩu phải có ít nhất 8 ký tự, 1 chữ hoa, 1 số."' },
+            { title: '6. Chia nhỏ Vấn đề Phức tạp', content: 'Với yêu cầu lớn, đừng nhồi nhét tất cả vào một prompt. Chia nhỏ thành các bước con, các yêu cầu đơn giản hơn.', exampleBad: '"Xây dựng toàn bộ REST API cho blog."', exampleGood: 'P1: "Thiết kế schema DB cho Post." -> P2: "Viết API endpoint tạo User." -> P3: "Viết API endpoint tạo Post."' },
+            { title: '7. Sử dụng Từ ngữ Khẳng định', content: 'Hướng dẫn AI điều NÊN làm, thay vì chỉ nói điều KHÔNG NÊN làm. Các chỉ dẫn tích cực thường hiệu quả hơn.', exampleBad: '"Đừng viết code có bug và không dùng vòng lặp while."', exampleGood: '"Hãy viết hàm này bằng vòng lặp for. Đảm bảo code xử lý được danh sách rỗng. Ưu tiên tính dễ đọc."' }
+        ];
+
+        const principleIcons = [
+            'target', 'book-open', 'user-check', 'ruler', 'repeat', 'git-fork', 'thumbs-up'
+        ];
+
+        function renderPrinciples() {
+            const container = document.getElementById('principlesContainer');
+            if (!container) {
+                console.error('Principles container not found!');
+                return;
+            }
+
+            container.innerHTML = principlesData.map((principle, index) => {
+                const icon = principleIcons[index] || 'award'; // fallback icon
+                return `
+                <div class="principle-card glass-morphism p-6 rounded-2xl card-hover" data-aos="fade-up" data-aos-delay="${index * 100}">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="${icon}" class="w-6 h-6 text-white"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-xl font-bold mb-3 text-blue-600 dark:text-blue-400">${principle.title}</h3>
+                            <p class="text-gray-600 dark:text-gray-400 mb-4">
+                                ${principle.content}
+                            </p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg">
+                                    <h4 class="font-bold text-red-700 dark:text-red-400 mb-2">❌ Ví dụ Tệ:</h4>
+                                    <code class="text-sm text-red-900 dark:text-red-300">${principle.exampleBad}</code>
+                                </div>
+                                <div class="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg">
+                                    <h4 class="font-bold text-green-700 dark:text-green-400 mb-2">✅ Ví dụ Tốt:</h4>
+                                    <code class="text-sm text-green-900 dark:text-green-300">${principle.exampleGood}</code>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            }).join('');
+        }
+
+
+        // Practice Cards Data
+        const practiceData = [
+            {
+                category: 'code',
+                title: 'Viết Hàm API',
+                prompt: 'Bạn là một lập trình viên backend Python. Viết một hàm API REST với FastAPI để [mô_tả_chức_năng]. Bao gồm validation, error handling và documentation.',
+                tip: 'Yêu cầu ví dụ request/response và test cases.',
+                icon: 'code'
+            },
+            {
+                category: 'debug',
+                title: 'Phân Tích Lỗi',
+                prompt: 'Tôi có lỗi [loại_lỗi] trong code [ngôn_ngữ]: [stack_trace]. Context: [mô_tả_context]. Hãy phân tích nguyên nhân và đề xuất fix.',
+                tip: 'Cung cấp đầy đủ error message và code context.',
+                icon: 'bug'
+            },
+            {
+                category: 'optimize',
+                title: 'Tối Ưu Performance',
+                prompt: 'Code [ngôn_ngữ] này chạy chậm với dataset lớn: [code]. Phân tích bottleneck và đề xuất optimization. Ưu tiên thay đổi algorithm.',
+                tip: 'Yêu cầu phân tích Big O complexity trước/sau.',
+                icon: 'zap'
+            },
+            {
+                category: 'code',
+                title: 'React Component',
+                prompt: 'Tạo React functional component [tên] với TypeScript. Props: [props]. Features: [features]. Sử dụng hooks phù hợp và styled-components.',
+                tip: 'Định nghĩa rõ interface cho props và state.',
+                icon: 'components'
+            },
+            {
+                category: 'debug',
+                title: 'CSS Layout Issue',
+                prompt: 'Layout CSS này có vấn đề [mô_tả_vấn_đề] trên [thiết_bị]: [css_code]. Mong muốn: [layout_mong_muốn]. Hãy fix và giải thích.',
+                tip: 'Cung cấp HTML structure và browser info.',
+                icon: 'layout'
+            },
+            {
+                category: 'optimize',
+                title: 'Database Query',
+                prompt: 'Query SQL này chậm: [query]. Database: [db_type]. Số records: [số_lượng]. Hãy optimize và giải thích execution plan.',
+                tip: 'Cung cấp table schema và indexes hiện có.',
+                icon: 'database'
+            }
+        ];
+
+        // Render Practice Cards
+        // (TRONG THẺ <script> Ở CUỐI FILE)
+
+        // Render Practice Cards - PHIÊN BẢN ĐÃ CẬP NHẬT
+        function renderPracticeCards(filter = 'all') {
+            const container = document.getElementById('practiceCards');
+            if (!container) return;
+            const filteredData = filter === 'all' ? practiceData : practiceData.filter(item => item.category === filter);
+
+            container.innerHTML = filteredData.map((item, index) => {
+                // Escape quotes in the prompt to prevent breaking the HTML attribute
+                const escapedPrompt = item.prompt.replace(/"/g, '"');
+
+                return `
+        <div class="practice-card glass-morphism flex flex-col p-6 rounded-2xl card-hover" data-aos="fade-up" data-aos-delay="${index * 100}">
+            <div class="flex items-center mb-4">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center mr-3 flex-shrink-0">
+                    <i data-lucide="${item.icon}" class="w-5 h-5 text-white"></i>
+                </div>
+                <span class="inline-block bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 text-xs font-semibold px-3 py-1 rounded-full">
+                    ${item.category.charAt(0).toUpperCase() + item.category.slice(1)}
+                </span>
+            </div>
+            <h4 class="text-xl font-bold mb-3 text-gray-800 dark:text-gray-200">${item.title}</h4>
+            
+            <!-- Prompt container with Copy Button -->
+            <div class="relative bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg mb-4 flex-grow">
+                <code class="block pr-10 text-sm text-gray-700 dark:text-gray-300">${item.prompt}</code>
+                <button 
+                    class="copy-prompt-btn absolute top-3 right-3 p-1.5 rounded-md text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors" 
+                    data-prompt="${escapedPrompt}" 
+                    title="Copy prompt">
+                    <i data-lucide="copy" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <div class="flex items-start space-x-2 mt-auto">
+                <i data-lucide="lightbulb" class="w-4 h-4 text-yellow-500 mt-0.5 flex-shrink-0"></i>
+                <p class="text-sm text-gray-600 dark:text-gray-400">${item.tip}</p>
+            </div>
+        </div>
+    `}).join('');
+        }
+
+        // Filter Functionality
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelector('.filter-btn.active').classList.remove('active');
+                btn.classList.add('active');
+
+                const filter = btn.dataset.filter;
+                renderPracticeCards(filter);
+                // Reinitialize Lucide icons and AOS after filtering practice cards
+                lucide.createIcons();
+                AOS.refresh();
+            });
+        });
+
+        // Initialize Page Content
+        function initializePageContent() {
+            renderPrinciples();
+            renderPracticeCards(); // Initial render for practice cards
+
+            // Reinitialize Lucide icons and AOS for all dynamically added content
+            lucide.createIcons();
+            AOS.refresh();
+        }
+
+        // Call initialization after DOM is ready
+        document.addEventListener('DOMContentLoaded', initializePageContent);
+        // Or, if this script is already at the end of the body, call directly (less robust):
+        // initializePageContent();
+
+
+        // GSAP Animations
+        gsap.registerPlugin();
+
+        // Floating animation for hero elements
+        gsap.to('.floating-animation', {
+            y: -20,
+            duration: 2,
+            ease: "power2.inOut",
+            repeat: -1,
+            yoyo: true
+        });
+
+        // Typewriter effect for hero title
+        const typewriterText = document.querySelector('.typewriter');
+        if (typewriterText) {
+            gsap.from(typewriterText, {
+                width: 0,
+                duration: 3,
+                ease: "steps(50)"
+            });
+        }
+
+        // Parallax effect for background elements
+        gsap.utils.toArray('.parallax-element').forEach(element => {
+            gsap.to(element, {
+                yPercent: -50,
+                ease: "none",
+                scrollTrigger: {
+                    trigger: element,
+                    start: "top bottom",
+                    end: "bottom top",
+                    scrub: true
+                }
+            });
+        });
+
+
+        // Performance optimization: Lazy loading for images
+        if ('IntersectionObserver' in window) {
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src;
+                        img.classList.remove('lazy');
+                        observer.unobserve(img);
+                    }
+                });
+            });
+
+            document.querySelectorAll('img[data-src]').forEach(img => {
+                imageObserver.observe(img);
+            });
+        }
+
+        // Add some fun easter eggs
+        let clickCount = 0;
+        const mainTitleGradient = document.querySelector('.hero-section .gradient-text'); // More specific selector
+        if (mainTitleGradient) {
+            mainTitleGradient.addEventListener('click', () => {
+                clickCount++;
+                if (clickCount === 5) {
+                    gsap.to(mainTitleGradient, {
+                        rotation: 360,
+                        duration: 1,
+                        ease: "bounce.out"
+                    });
+
+                    // Create confetti effect
+                    for (let i = 0; i < 50; i++) {
+                        const confetti = document.createElement('div');
+                        confetti.className = 'fixed w-2 h-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full pointer-events-none z-[99999]'; // Ensure high z-index
+                        confetti.style.left = Math.random() * window.innerWidth + 'px';
+                        confetti.style.top = '-10px';
+                        document.body.appendChild(confetti);
+
+                        gsap.to(confetti, {
+                            y: window.innerHeight + 100,
+                            x: (Math.random() - 0.5) * 200,
+                            rotation: Math.random() * 360,
+                            duration: Math.random() * 2 + 1,
+                            ease: "power2.out",
+                            onComplete: () => confetti.remove()
+                        });
+                    }
+
+                    clickCount = 0;
+                }
+            });
+        }
+
+        // (TRONG THẺ <script> Ở CUỐI FILE)
+
+        // Copy-to-Clipboard Functionality for Practice Cards
+        const practiceCardsContainer = document.getElementById('practiceCards');
+        if (practiceCardsContainer) {
+            practiceCardsContainer.addEventListener('click', (e) => {
+                // Use .closest() to find the button, even if the icon inside is clicked
+                const copyButton = e.target.closest('.copy-prompt-btn');
+
+                if (copyButton) {
+                    const promptToCopy = copyButton.dataset.prompt;
+                    const originalIcon = copyButton.innerHTML;
+
+                    navigator.clipboard.writeText(promptToCopy).then(() => {
+                        // Success feedback
+                        copyButton.innerHTML = '<i data-lucide="check" class="w-4 h-4 text-green-500"></i>';
+                        lucide.createIcons(); // Re-render the new icon
+
+                        // Revert back to the original icon after 2 seconds
+                        setTimeout(() => {
+                            copyButton.innerHTML = originalIcon;
+                            lucide.createIcons(); // Re-render the original icon
+                        }, 2000);
+
+                    }).catch(err => {
+                        console.error('Failed to copy prompt: ', err);
+                        // Optional: show an error state
+                        copyButton.innerHTML = '<i data-lucide="x" class="w-4 h-4 text-red-500"></i>';
+                        lucide.createIcons();
+                        setTimeout(() => {
+                            copyButton.innerHTML = originalIcon;
+                            lucide.createIcons();
+                        }, 2000);
+                    });
+                }
+            });
+        }
+
+
+        console.log('🚀 Prompt Engineering Pro - Designed by Trần Hữu Phước');
+        console.log('💡 Tip: Nhấp 5 lần vào tiêu đề chính ("Đỉnh Cao") để có bất ngờ!');
+    </script>
+</body>
+
+</html>
